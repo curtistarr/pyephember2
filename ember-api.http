@@ -1,0 +1,309 @@
+### EPH Ember API Test Collection
+### Base URL: https://eu-https.topband-cloud.com/ember-back
+###
+### This file can be used with VS Code REST Client extension or similar HTTP clients
+### Replace the variables with your actual values
+
+@baseUrl = https://eu-https.topband-cloud.com/ember-back
+@username = user@email.com
+@password = your_password
+@token = {{login.response.body.data.token}}
+@refreshToken = {{login.response.body.data.refresh_token}}
+@gatewayId = gwid1234
+@zoneId = 7000
+
+###############################################################################
+# Authentication Endpoints
+###############################################################################
+
+### 1. Login
+# @name login
+POST {{baseUrl}}/appLogin/login
+Accept: application/json
+Content-Type: application/json;charset=utf-8
+
+{
+  "password": "{{password}}",
+  "model": "iPhone XS",
+  "os": "13.5",
+  "type": 2,
+  "appVersion": "2.0.4",
+  "userName": "{{username}}"
+}
+
+### 2. Refresh Access Token
+# @name refreshToken
+GET {{baseUrl}}/appLogin/refreshAccessToken
+Accept: application/json
+Authorization: {{refreshToken}}
+
+###############################################################################
+# User Endpoints
+###############################################################################
+
+### 3. Report Token (Optional - sent after login)
+POST {{baseUrl}}/user/reportToken
+Authorization: {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "os": "ios",
+  "phoneToken": "really_long_phone_token",
+  "type": 1,
+  "appVersion": "2.0.4"
+}
+
+### 4. Select User (Get User Information)
+GET {{baseUrl}}/user/selectUser
+Authorization: {{token}}
+Accept: application/json
+
+###############################################################################
+# Home Endpoints
+###############################################################################
+
+### 5. Get Available Homes
+GET {{baseUrl}}/homes/list
+Authorization: {{token}}
+Accept: application/json
+Content-Length: 0
+
+### 6. Get Home Details
+POST {{baseUrl}}/homes/detail
+Authorization: {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "gateWayId": "{{gatewayId}}"
+}
+
+### 7. Get Weather Info
+POST {{baseUrl}}/homes/weathInfo
+Authorization: {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "gateWayId": "{{gatewayId}}"
+}
+
+### 8. Change Frost Protection
+POST {{baseUrl}}/homes/changeFrostProtection
+Authorization: {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "button": "off",
+  "gateWayId": "{{gatewayId}}"
+}
+
+###############################################################################
+# Zone Endpoints (New API - 2021+)
+###############################################################################
+
+### 9. Get All Zones Information (New API)
+POST {{baseUrl}}/homesVT/zoneProgram
+Authorization: {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "gateWayId": "{{gatewayId}}"
+}
+
+### 10. Get Single Zone Program (New API)
+POST {{baseUrl}}/homesVT/zoneViewProgram
+Authorization: {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "zoneid": "{{zoneId}}"
+}
+
+###############################################################################
+# Zone Endpoints (Old API - 2020)
+###############################################################################
+
+### 11. Get Zone List (Old API)
+POST {{baseUrl}}/homes/zoneList
+Authorization: {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "gateWayId": "{{gatewayId}}"
+}
+
+### 12. Get Zone Details (Polling)
+POST {{baseUrl}}/zones/polling
+Authorization: {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "gateWayId": "{{gatewayId}}"
+}
+
+### 13. Get Single Zone Data
+POST {{baseUrl}}/zones/data
+Authorization: {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "zoneid": "{{zoneId}}"
+}
+
+###############################################################################
+# Zone Control Endpoints
+###############################################################################
+
+### 14. Set Zone Target Temperature
+POST {{baseUrl}}/zones/setTargetTemperature
+Authorization: {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "zoneid": "{{zoneId}}",
+  "temperature": 21.5
+}
+
+### 15. Set Zone Mode (Run Selection)
+# Modes: 0=Auto, 1=All Day, 2=On, 3=Off
+POST {{baseUrl}}/zones/setModel
+Authorization: {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "model": "0",
+  "zoneid": "{{zoneId}}"
+}
+
+### 16. Turn On Boost
+POST {{baseUrl}}/zones/boost
+Authorization: {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "hours": "1",
+  "zoneid": "{{zoneId}}",
+  "temperature": "24.0"
+}
+
+### 17. Turn Off Boost
+POST {{baseUrl}}/zones/cancelBoost
+Authorization: {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "zoneid": "{{zoneId}}"
+}
+
+### 18. Get Boost Status
+POST {{baseUrl}}/zones/getBoostFirstTime
+Authorization: {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "zoneid": "{{zoneId}}"
+}
+
+### 19. Advance the Zone
+POST {{baseUrl}}/zones/adv
+Authorization: {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "zoneid": "{{zoneId}}"
+}
+
+### 20. Cancel Advance
+POST {{baseUrl}}/zones/cancelAdv
+Authorization: {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "zoneid": "{{zoneId}}"
+}
+
+### 21. Update Zone Data/Programmes
+POST {{baseUrl}}/zones/updateData
+Authorization: {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "data": [
+    {
+      "zoneid": "{{zoneId}}",
+      "programmes": {
+        "monday": {
+          "dayperiodid": 51823,
+          "p1": {
+            "endtime": "09:20",
+            "periodid": 155467,
+            "starttime": "08:30",
+            "type": 0
+          },
+          "p2": {
+            "endtime": "14:30",
+            "periodid": 155468,
+            "starttime": "14:00",
+            "type": 0
+          },
+          "p3": {
+            "endtime": "19:30",
+            "periodid": 155469,
+            "starttime": "19:00",
+            "type": 0
+          }
+        }
+      }
+    }
+  ]
+}
+
+###############################################################################
+# Notes
+###############################################################################
+
+# MQTT Endpoints (not HTTP):
+# - MQTT URL: eu-base-mqtt.topband-cloud.com:18883 (TLS)
+# - Topics:
+#   - productId/uid/upload/pointdata (Subscribe)
+#   - productId/uid/download/pointdata (Publish)
+#   - productId/uid/device/remove
+#   - [id]/[clientId]/notificationApp/update
+#
+# Point Data Indices (for MQTT messages):
+#   3: Unknown
+#   4: Advance On/Off
+#   5: Current Temp
+#   6: Target Temp
+#   7: Mode (0=auto, 1=all day, 2=on, 3=off)
+#   8: Boost Hours (0-3)
+#   9: Boost Timestamp
+#   10: Boiler State (1=off, 2=on)
+#   11: Unknown
+#   13: Unknown
+#   14: Boost Target Temp
+#
+# Response Format:
+# All responses return JSON with:
+# {
+#   "data": {...},
+#   "message": "succ." or error message,
+#   "status": 0 (success) or non-zero (error),
+#   "timestamp": unix_timestamp_in_milliseconds
+# }
