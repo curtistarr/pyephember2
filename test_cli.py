@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """
 Test application for EPH Ember thermostat control
-Tests CP4 (device type 258) and other thermostat types
 
-Usage: python3 test_cp4.py
+Usage: python3 test_cli.py
 """
 
 import sys
@@ -227,7 +226,6 @@ def main():
     """Main application loop"""
     print("=" * 70)
     print("EPH Ember Thermostat Test Application")
-    print("CP4 (Device Type 258) and Other Thermostats")
     print("=" * 70)
 
     # Get credentials

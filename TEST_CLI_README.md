@@ -1,6 +1,6 @@
 # CP4 Thermostat Test Application
 
-This is a CLI test application for testing EPH Ember thermostat controls, specifically designed to test the CP4 (COMBIPACK4) device type 258 support.
+This is a CLI test application for testing EPH Ember thermostat controls.
 
 ## Features
 
@@ -16,7 +16,7 @@ The test application allows you to:
 
 ## Requirements
 
-- Python 3.7+
+- Python 3.10+
 - pyephember2 package installed
 
 ## Installation
@@ -31,12 +31,12 @@ pip install -e .
 
 Run the test application:
 ```bash
-python3 test_cp4.py
+python3 test_cli.py
 ```
 
 Or, since it's executable:
 ```bash
-./test_cp4.py
+./test_cli.py
 ```
 
 ## What the Application Does
@@ -57,34 +57,6 @@ Or, since it's executable:
    - Control boost function
    - Switch between zones
 
-## Testing CP4 Features
-
-For a CP4 thermostat (device type 258), you should be able to:
-
-### ✓ View Information
-- Current temperature (Index 5)
-- Target temperature (Index 6)
-- Current mode (Index 11: 0=AUTO, 1=MANUAL, 4=OFF)
-- Boost active state (Index 13: 0=Inactive, 1=Active)
-- Boost end time (Index 15)
-
-### ✓ Set Mode
-- AUTO mode (schedules active)
-- MANUAL mode (manual control)
-- OFF mode
-
-### ✓ Control Temperature
-- Set target temperature (adjusts based on current mode)
-- Set boost temperature
-
-### ✓ Control Boost
-- Activate boost with duration (1-3 hours)
-- Set boost temperature
-- Deactivate boost
-
-### ⚠ Not Supported on CP4
-- Advance mode (will show as not supported)
-
 ## Example Session
 
 ```
@@ -92,7 +64,6 @@ $ python3 test_cp4.py
 
 ======================================================================
 EPH Ember Thermostat Test Application
-CP4 (Device Type 258) and Other Thermostats
 ======================================================================
 
 Enter username (email): your.email@example.com
