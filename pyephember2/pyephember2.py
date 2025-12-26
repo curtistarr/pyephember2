@@ -43,7 +43,7 @@ def GetPointIndex(zone, pointIndex) -> int:
                     return 6
         case PointIndex.MODE:
             match zone['deviceType']:
-                case 514 | 773:
+                case 514 | 773 | 258:
                     return 11
                 case 2 | 4:
                     return 7
@@ -51,7 +51,7 @@ def GetPointIndex(zone, pointIndex) -> int:
                     return 7
         case PointIndex.BOOST_HOURS:
             match zone["deviceType"]:
-                case 514 | 773:
+                case 514 | 773 | 258:
                     # Returns 0 if boost is OFF and 1 if ON
                     return 13
                 case _:
@@ -169,7 +169,7 @@ def zone_advance_active(zone):
     Check if zone has advance active
     """
     match zone["deviceType"]:
-        case 773:
+        case 773 | 258:
             # Mode not supported
             return False
         case 514:
@@ -448,7 +448,7 @@ def zone_mode(zone):
             return ZoneMode.AUTO
         case 1 | 9:
             match zone["deviceType"]:
-                case 773:
+                case 773 | 258:
                     return ZoneMode.ON
                 case _:
                     return ZoneMode.ALL_DAY
@@ -462,7 +462,7 @@ def get_zone_mode_value(zone, mode) -> int:
         return 0
 
     match zone['deviceType']:
-        case 773:
+        case 773 | 258:
             match mode:
                 case ZoneMode.ON:
                     return 1
