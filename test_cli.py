@@ -6,12 +6,42 @@ Usage: python3 test_cli.py
 """
 
 import sys
-import getpass
+import os
 from pyephember2 import pyephember2
 
 # Temperature bounds (in Celsius)
 MIN_TEMP = 5
 MAX_TEMP = 35
+
+# Environment file path
+ENV_FILE = ".env"
+
+def load_credentials():
+    """Load credentials from .env file if it exists"""
+    if os.path.exists(ENV_FILE):
+        credentials = {}
+        with open(ENV_FILE, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and '=' in line:
+                    key, value = line.split('=', 1)
+                    credentials[key.strip()] = value.strip()
+
+        username = credentials.get('EPH_USERNAME')
+        password = credentials.get('EPH_PASSWORD')
+
+        if username and password:
+            return username, password
+
+    return None, None
+
+def save_credentials(username, password):
+    """Save credentials to .env file"""
+    with open(ENV_FILE, 'w') as f:
+        f.write(f"# EPH Ember credentials\n")
+        f.write(f"EPH_USERNAME={username}\n")
+        f.write(f"EPH_PASSWORD={password}\n")
+    print(f"✓ Credentials saved to {ENV_FILE}")
 
 def print_separator():
     print("=" * 70)
@@ -235,13 +265,30 @@ def main():
     print("EPH Ember Thermostat Test Application")
     print("=" * 70)
 
-    # Get credentials
-    username = input("\nEnter username (email): ").strip()
-    password = getpass.getpass("Enter password: ")
+    # Try to load credentials from file
+    username, password = load_credentials()
 
+    if username and password:
+        print(f"\n✓ Loaded credentials from {ENV_FILE}")
+        print(f"Username: {username}")
+        use_saved = input("Use these credentials? (y/n): ").strip().lower()
+        if use_saved != 'y':
+            username = None
+            password = None
+
+    # Get credentials from user if not loaded
     if not username or not password:
-        print("Username and password are required")
-        sys.exit(1)
+        username = input("\nEnter username (email): ").strip()
+        password = input("Enter password: ").strip()
+
+        if not username or not password:
+            print("Username and password are required")
+            sys.exit(1)
+
+        # Ask if user wants to save credentials
+        save_choice = input("Save credentials to .env? (y/n): ").strip().lower()
+        if save_choice == 'y':
+            save_credentials(username, password)
 
     # Connect to API
     print("\nConnecting to EPH Ember API...")
