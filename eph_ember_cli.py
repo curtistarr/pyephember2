@@ -64,7 +64,7 @@ def print_zone_info(zone):
 
     # Mode info
     mode = pyephember2.zone_mode(zone)
-    print(f"\nMODE: {mode.name}")
+    print(f"\nMODE: {mode.name if mode else 'N/A'}")
 
     # Boost info
     boost_active = pyephember2.zone_is_boost_active(zone)
