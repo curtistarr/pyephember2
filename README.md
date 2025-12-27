@@ -20,4 +20,22 @@ API
 
 The API is a basic HTTPS API returning data in JSON format. For more details see [here](API.md)
 
+CLI Testing Tool
+---
+
+An interactive CLI tool (`eph_ember_cli.py`) is included for testing and controlling your EPH Ember thermostats:
+
+    >>> python3 eph_ember_cli.py
+
+Features:
+- Interactive zone selection and control
+- View current/target temperatures and device status
+- Change zone modes (AUTO/MANUAL/OFF)
+- Activate/deactivate boost functionality
+- Set target and boost temperatures
+- Credential persistence via `.env` file
+- Display raw point data for debugging
+
+The tool supports all EPH Ember thermostat types including CP4 (COMBIPACK4, device type 258).
+
 Disclaimer: I have no connection with EPH Controls so cannot guarentee that these API calls will always be valid.
