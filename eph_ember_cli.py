@@ -2,7 +2,7 @@
 """
 Test application for EPH Ember thermostat control
 
-Usage: python3 test_cli.py
+Usage: python3 eph_ember_cli.py
 """
 
 import sys

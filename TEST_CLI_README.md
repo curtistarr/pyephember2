@@ -31,12 +31,12 @@ pip install -e .
 
 Run the test application:
 ```bash
-python3 test_cli.py
+python3 eph_ember_cli.py
 ```
 
 Or, since it's executable:
 ```bash
-./test_cli.py
+./eph_ember_cli.py
 ```
 
 ## What the Application Does
