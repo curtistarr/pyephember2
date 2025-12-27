@@ -9,6 +9,10 @@ import sys
 import getpass
 from pyephember2 import pyephember2
 
+# Temperature bounds (in Celsius)
+MIN_TEMP = 5
+MAX_TEMP = 35
+
 def print_separator():
     print("=" * 70)
 
@@ -138,14 +142,14 @@ def set_target_temperature(eph, zone):
     """Set the target temperature"""
     try:
         temp = float(input("Enter target temperature (°C): ").strip())
-        if 5 <= temp <= 35:
+        if MIN_TEMP <= temp <= MAX_TEMP:
             success = eph.set_zone_target_temperature(zone['zoneid'], temp)
             if success:
                 print(f"✓ Target temperature set to {temp}°C")
             else:
                 print("✗ Failed to set target temperature")
         else:
-            print("Temperature must be between 5°C and 35°C")
+            print(f"Temperature must be between {MIN_TEMP}°C and {MAX_TEMP}°C")
     except ValueError:
         print("Invalid temperature value")
     except Exception as e:
@@ -187,16 +191,19 @@ def deactivate_boost(eph, zone):
 
 def set_boost_temperature(eph, zone):
     """Set the boost temperature"""
+    if not pyephember2.zone_is_boost_active(zone):
+        print("⚠ Warning: Boost is not currently active. Setting boost temperature may not take effect until boost is activated.")
+
     try:
         temp = float(input("Enter boost temperature (°C): ").strip())
-        if 5 <= temp <= 35:
+        if MIN_TEMP <= temp <= MAX_TEMP:
             success = eph.set_zone_boost_temperature(zone['zoneid'], temp)
             if success:
                 print(f"✓ Boost temperature set to {temp}°C")
             else:
                 print("✗ Failed to set boost temperature")
         else:
-            print("Temperature must be between 5°C and 35°C")
+            print(f"Temperature must be between {MIN_TEMP}°C and {MAX_TEMP}°C")
     except ValueError:
         print("Invalid temperature value")
     except Exception as e:
@@ -204,7 +211,7 @@ def set_boost_temperature(eph, zone):
 
 def set_advance(eph, zone):
     """Set advance state"""
-    if pyephember2.zone_advance_active(zone) is False and zone['deviceType'] in [773, 258, 514]:
+    if pyephember2.zone_advance_active(zone) is None:
         print("⚠ Advance mode is not supported on this device type")
         return
 
@@ -269,11 +276,22 @@ def main():
         try:
             homes = eph.get_zones()
             # Find the current zone in refreshed data
+            zone_found = False
             for home in homes:
                 for zone in home['zones']:
                     if zone['zoneid'] == current_zone['zoneid']:
                         current_zone = zone
+                        zone_found = True
                         break
+                if zone_found:
+                    break
+
+            if not zone_found:
+                print(f"⚠ Warning: Zone {current_zone['zoneid']} no longer found. Please select a new zone.")
+                current_zone = get_zone_choice(eph, homes)
+                if not current_zone:
+                    print("\nNo zone selected. Exiting.")
+                    break
         except Exception as e:
             print(f"⚠ Warning: Failed to refresh zone data: {e}")
 
